@@ -1,70 +1,53 @@
-/**
-   Writing in comments for Justin.
-
-   Always check the documentation:
-   https://docs.oracle.com/javase/7/docs/api/java/io/File.html
- */
-
 import java.io.*;
-
-public class picturerenamer
-{
-		public static void main(String[] args)
+import javax.swing.JOptionPane;
+  public class picturerenamer
+  {
+ 
+	  public static void main(String[] args)
 		{
-				File dir = new File("D:\\safey\\Pictures\\2017-04");
-				int i = 0; // counter for naming photos
-				if (dir.isDirectory()) // make sure it's a directory
+		  JOptionPane.showMessageDialog(null,"To get the full address it can be copied from the folder address bar.");
+			String fileLocation=JOptionPane.showInputDialog("Please enter the full address of the folder that contains the pictures you want to rename.");
+				File picDir = new File(fileLocation); // path is OS dependent
+               
+				
+				
+				// TODO: look up how to make OS - independent
+				
+				if (picDir.isDirectory()) // make sure it's a directory
 				{
-						for (final File f : dir.listFiles())
+						for (final File f : picDir.listFiles())
 						{
-								i++;
-								if (Integer.toString(i).length()==1) // i / 10 == 0 if i is a single digit
-								{                                    // which is faster than a string conv.
-										// java has automatic conversion using the + operator between
-										// a string and a numeric. therefore string + Integer.toString(i)
-										// can be rewritten as string + numeric to get the string
-										File newfile = new File("00" + Integer.toString(i) + ".jpg");
+							 String fileName = f.getName();
+					    	 System.out.println(fileName);
+					    	 String fileName2=fileName.replaceAll("[^0-9]","");
+					    	 int fileNamNum=Integer.parseInt(fileName2);
+					    	 System.out.println(fileName2);
+			
+								String fileName3= String.format("%03d", fileNamNum);
+								System.out.println(fileName3);
+								File newFile = new File(fileLocation+"//"+fileName3 + ".jpg");
 
-										if (f.renameTo(newfile))
-										{
-												System.out.println("Rename succesful");
-										}
-										else
-										{
-												System.out.println("Rename failed");
-										}
-
-								}
-								if (Integer.toString(i).length()==2) // I know it's logically sound, but
-								{                                    // wouldn't you want this to be else-if
-										                             // for clarity?
-										File newfile = new File("0" + Integer.toString(i) + ".jpg");
-
-										if (f.renameTo(newfile))
-										{
-												System.out.println("Rename succesful");
-										}
-										else
-										{
-												System.out.println("Rename failed");
-										}
-
-								}
-								else // this is using the previous if statement (the one checking for length 2)
+								/* or
+								switch (Integer.toString(fileCount).length())
 								{
-										File newfile = new File(Integer.toString(i) + ".jpg");
-
-										if (f.renameTo(newfile))
-										{
-												System.out.println("Rename succesful");
-										}
-										else
-										{
-												System.out.println("Rename failed");
-										}
-
+								case 1:
+										newFile = new File("00" + fileCount + ".jpg");
+										break;
+								case 2:
+										newFile = new File("0" + fileCount + ".jpg");
+										break;
+								default:
+										newFile = new File(fileCount + ".jpg");
 								}
+								*/
+
+								// notice where the files end up
+								if (f.renameTo(newFile))
+										System.out.println("Rename successful!: " + f.getAbsolutePath() +
+														   " => " + newFile.getAbsolutePath());
+								else
+										System.out.println("Rename failed. " + f.getAbsolutePath());
 						}
 				}
 		}
-}
+ }
